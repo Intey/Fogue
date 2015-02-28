@@ -18,9 +18,6 @@ def init_window():  # move this in another module
     return wnd
 
 
-def nop(any):
-    return
-
 
 def reset():
     curses.nocbreak()
@@ -51,12 +48,12 @@ def processInput(char):
     made on map where key is inputed char, and value is action function.
     BUG: when char is not found in keys - it return string (WAT)
     """
+    def nop(any): pass
     return {ord('w'): moveUp,
             ord('s'): moveDown,
             ord('a'): moveLeft,
-            ord('d'): moveRight,
-            ord(' '): nop
-            }.get(char, ' ')  # this should replase not founded char with ' '
+            ord('d'): moveRight
+            }.get(char, nop)  # return
 
 
 def gameLoop():
