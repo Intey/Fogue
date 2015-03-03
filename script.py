@@ -18,7 +18,6 @@ def init_window():  # move this in another module
     return wnd
 
 
-
 def reset():
     curses.nocbreak()
     curses.echo()
