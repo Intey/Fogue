@@ -1,19 +1,26 @@
-import generation
-import io
 
-def printRoom(room):
-    for row in room:
-        print("".join([e for e in row]))
-
-room = (generation.createRoom(8, 6))
-printRoom(room)
-print()
-
-mp = generation.Map(20, 20)
-mp.addRoom(generation.Room(4, 4, 8, 8))
-mp.addRoom(generation.Room(10, 10, 15, 18))
-
-generation.printTiles(mp)
-
-io = Output
-room.draw(io)
+print("Ebani tests!")
+#class Map():
+#    def __init__(self, width, height):
+#        self.tiles = [["#" for _ in range(0, width)] for _ in range(0, height)]
+#        self.rooms = []
+#        self.corridors = []
+#
+#
+#    def mkVertCorridor(self, x, start_y, end_y):
+#        for y in range(start_y, end_y):
+#            self.tiles[y][x] = "."
+#            
+#            
+#    def mkHoriCorridor(self, start_x, y, end_x):
+#        for x in range(start_x, end_x):
+#            self.tiles[y][x] = "."
+#
+#
+#    def mkCornCorridor(self, x, y, width, height):
+#        mkVertCorridor(x, y, y+height) 
+#        mkHoriCorridor(x, y, x+width) 
+#        
+#        
+#m = Map
+#m.mkCornCorridor(5,10,5,5)

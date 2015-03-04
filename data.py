@@ -54,17 +54,41 @@ class Room(Drawable):
                 return corrY, max(self.x, room.x), min(self.x + self.width, room.x + room.widht)
 
 
-class Map:
+class Map(Drawable):
     def __init__(self, width, height):
         self.tiles = [["#" for _ in range(0, width)] for _ in range(0, height)]
         self.rooms = []
+        self.corridors = []
 
-    def mkVertCorridor(self, x, top, bottom):
-        for y in range(top, bottom):
+
+    def mkVertCorridor(self, x, start_y, end_y):
+        for y in range(start_y, end_y):
+            self.tiles[y][x] = "."
+            
+            
+    def mkHoriCorridor(self, start_x, y, end_x):
+        for x in range(start_x, end_x):
             self.tiles[y][x] = "."
 
+
+    def mkCornCorridor(self, x, y, width, height):
+        mkVertCorridor(x, y, y+height) 
+        mkHoriCorridor(x, y, x+width) 
+    
     def addRoom(self, room):
         self.rooms.append(room)
         for x in range(room.x, room.width):
             for y in range(room.y, room.height):
                 self.tiles[y][x] = "."
+                
+                
+    def printTiles(self):
+        for row in self.tiles:
+                print("".join(y for y in row))
+                
+                
+    def draw(self, context):
+        for r in self.rooms:
+            r.draw(context)
+        for crd in self.corridors:
+            crd.draw(context)
