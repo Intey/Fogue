@@ -2,6 +2,15 @@ import curses
 
 window = curses.initscr()
 
+BLACK   = curses.COLOR_BLACK
+RED     = curses.COLOR_RED
+GREEN   = curses.COLOR_GREEN
+YELLOW  = curses.COLOR_YELLOW
+BLUE    = curses.COLOR_BLUE
+MAGENTA = curses.COLOR_MAGENTA
+CYAN    = curses.COLOR_CYAN
+WHITE   = curses.COLOR_WHITE
+
 class Output:
     def __init__( self ):
         
@@ -14,8 +23,8 @@ class Output:
         self.window.keypad(1)           # hz
         # curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
 
-    def char(x, y, color, char="."):
-        wnd.addch( y, x, char, color )
+    def char( self, x, y, color, char="." ): 
+        self.window.addch( y, x, char, color )
         return
 
 class Input:
@@ -25,11 +34,13 @@ class Input:
         self.aliases = {}
         ""
     # chars....
-    def alias( self, *chars, alias ):
+    def alias( self, alias, *chars ):
         for char in chars:
             self.aliases[ char ] = alias
+        return
     
-    def char():
+    def char( self ):
         ch = self.window.getch()
         if ch in self.aliases:
-            return 0
+            ch = self.aliases[ ch ]
+        return ch
