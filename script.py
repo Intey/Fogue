@@ -6,7 +6,6 @@ class Player:
         self.x = 0
         self.y = 0
 
-
 def init_window():  # move this in another module
     wnd = curses.initscr()
     curses.noecho()
@@ -16,7 +15,6 @@ def init_window():  # move this in another module
     wnd.keypad(1)  # hz
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     return wnd
-
 
 def reset():
     curses.nocbreak()
@@ -37,10 +35,8 @@ def moveDown(p):
 def moveLeft(p):
     p.x -= 1
 
-
 def moveRight(p):
     p.x += 1
-
 
 def processInput(char):
     """ Convert char to function with parameter - player.

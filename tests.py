@@ -1,5 +1,5 @@
 import generation
-
+import io
 
 def printRoom(room):
     for row in room:
@@ -14,3 +14,6 @@ mp.addRoom(generation.Room(4, 4, 8, 8))
 mp.addRoom(generation.Room(10, 10, 15, 18))
 
 generation.printTiles(mp)
+
+io = Output
+room.draw(io)

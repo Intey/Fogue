@@ -7,7 +7,14 @@ class Room:
         self.height = h
         self.x = x
         self.y = y
-
+        
+    def draw(context):
+        for x in range(x, width):
+            for y in range(y, height):
+                context.char(x, y, ".")
+        # creature.draw( context ) for creature in creatures !!!
+        # return
+        
     def getConnection(self, room):
         """Connect 2 rooms by nearest path.
         TODO: Determine nearest sides: check horizontal check vertical.
@@ -55,39 +62,10 @@ def printTiles(m):
 def roomConnecting():
     global r1, r2
     r1 = Room(1, 1, 10, 10)
-    r2 = Room(5, 5, 10, 10)
+    r2 = Room(5, 5, 9, 9)
     r1.getConnection(r2)
     r2 = Room(0, 0, 3, 10)
     r1 = Room(5, 5, 10, 10)
     r1.getConnection(r2)
 
 
-def createDungeon(roomsCnt, connections):
-    rooms = createRooms(8)
-    # get each pair of rooms
-    connectRooms(rooms[0], rooms[1])
-    # connect pairs of rooms
-
-
-def createRooms(count):
-    rooms = [createRoom() for i in count]
-    return rooms
-
-
-def connectRooms(first, second):
-    # determine direction of corridor
-    return False
-
-
-def createRoom(width, height):
-    """just return empty room with borders"""
-    room = [["." for c in range(width)] for r in range(height)]
-    # create border
-    for row in range(height):
-        if row == 0 or row == height-1:
-            room[row] = list(("#" * width))
-        else:
-            for col in range(width):
-                if col == 0 or col == width-1:
-                    room[row][col] = "#"
-    return room
