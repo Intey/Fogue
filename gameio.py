@@ -1,6 +1,6 @@
 # import curses
 
-__name__ = "io"
+__name__ = "gameio"
 
 import sys
 
@@ -71,18 +71,15 @@ class Output:
         
         self.buffer += char
         
-        if color != None:
-            self.style( None )
-        
         return
     
     def move( self, x=0, y=0 ):
+        # move cursor in x,y on screen
         self.buffer += ESC + "[" + str(x) + ";" + str(y) + "f"
         return
     
-    def style( self, mods ):
-        if mods is None:
-            mods = [ RESET_COLOR ]
+    def style( self, mods=RESET_COLOR ):
+        # set new colors from mods
         self.buffer += ESC + "[" + ";".join( mods ) + "m"
         return
     
@@ -90,7 +87,7 @@ class Output:
         self.buffer += CLEAR_SCREEN
         return
     
-    def redraw( self, ):
+    def redraw( self ):
         sys.stdout.write( self.buffer )
         self.buffer = ""
         return

@@ -1,5 +1,5 @@
-import io
+import gameio
 
-output = io.Output()
-output.char( "@", 1, 1, [ io.BRIGHT_CYAN ] )
+output = gameio.Output()
+output.char( "@", 1, 1, [ gameio.BRIGHT_CYAN ] )
 output.redraw()
