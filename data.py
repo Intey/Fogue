@@ -1,12 +1,13 @@
 import io
 import random
 
+
 # like interface
 class Drawable:
     def draw(self, context):
         pass #nothing doing there.
-    
-    
+
+
 class Item(Drawable):
     def __init__(self, x, y):
         self.name="unknown"
@@ -25,7 +26,7 @@ class Room(Drawable):
         self.y = y
         self.creatures = []
         self.items = []
-        
+
     def draw(self, context):
         for self.x in range(self.x, self.width):
             for self.y in range(self.y, self.height):
@@ -35,10 +36,10 @@ class Room(Drawable):
         for item in self.items:
             item.draw( context )
         # return
-        
+
     def addCreature(self, creature):
         self.creatures.append(creature)  # ok
-        
+
     def getConnection(self, room):
         """Connect 2 rooms by nearest path.
         TODO: Determine nearest sides: check horizontal check vertical.
@@ -64,29 +65,30 @@ class Map(Drawable):
     def mkVertCorridor(self, x, start_y, end_y):
         for y in range(start_y, end_y):
             self.tiles[y][x] = "."
-            
-            
+
+
     def mkHoriCorridor(self, start_x, y, end_x):
         for x in range(start_x, end_x):
             self.tiles[y][x] = "."
 
 
     def mkCornCorridor(self, x, y, width, height):
-        mkVertCorridor(x, y, y+height) 
-        mkHoriCorridor(x, y, x+width) 
-    
+        self.mkVertCorridor(x, y, y+height)
+        self.mkHoriCorridor(x, y, x+width)
+
+
     def addRoom(self, room):
         self.rooms.append(room)
         for x in range(room.x, room.width):
             for y in range(room.y, room.height):
                 self.tiles[y][x] = "."
-                
-                
+
+
     def printTiles(self):
         for row in self.tiles:
                 print("".join(y for y in row))
-                
-                
+
+
     def draw(self, context):
         for r in self.rooms:
             r.draw(context)
