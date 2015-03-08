@@ -1,7 +1,6 @@
 # import gameio
 import random
-
-
+import math
 # like interface
 #class Drawable:
 #    def draw(self, context):
@@ -66,59 +65,114 @@ class Room():
 #     # # # # #
 #     n # n # n
 # May use unique pairs list for connections - one pair will connect once.
+
+
+# Madic numbers
+
+ROOM_WIDTH  = [ 3, 5 ] # const + random
+ROOM_HEIGHT = [ 3, 5 ]
+CORRIDOR_MIN_SPACE = 3
+ROOM_RATIO = 0.8
+
 class Map():
     def __init__(self, width, height):
-        self.points = [["#" for _ in range(0, 80)] for _ in range(0, 25)]
+        self.points = {}
         self.rooms = []
-        self.corridors = []
-        self.tiles = [[x for x in range(1, 8)] for y in range(1,5)]
-
-
-    def createTiles(self):
-        self.tiles = []
+        self.width = width
+        self.height = height
         
         
         
-    def mkVertCorridor(self, x, start_y, end_y):
-        for y in range(start_y, end_y):
-            self.points[y][x] = "."
-
-
-    def mkHoriCorridor(self, start_x, y, end_x):
-        for x in range(start_x, end_x):
-            self.points[y][x] = "."
-
-
+        # no need for self, __init__ runtime only
+        tiles = self.getTiles( width, height )
+        self.fillTiles( tiles )
+        # self.connectRooms()
     
-    def mkCornCorridor(self, x, y, width, height, corner="LU"):
-        if corner == "LU":
-            self.mkVertCorridor(x, y, y+height)
-            self.mkHoriCorridor(x, y, x+width)
-        if corner == "LB":
-            self.mkVertCorridor(x+width-1, y, y+height)
-            self.mkHoriCorridor(x, y+height-1, x+width)
-        if corner == "RU":
-            self.mkVertCorridor(x+width-1, y, y+height)
-            self.mkHoriCorridor(x, y+height-1, x+width)
-        if corner == "RB":
-            self.mkVertCorridor(x+width-1, y, y+height)
-            self.mkHoriCorridor(x, y+height-1, x+width)
-
-
-    def addRoom(self, room):
-        self.rooms.append(room)
-        for x in range(room.x, room.x+room.width):
-            for y in range(room.y, room.y+room.height):
-                self.points[y][x] = "."
-
-
+    def getTiles(self, screenx, screeny):
+        # tile size
+        width  = ROOM_WIDTH[0]  + ROOM_WIDTH[1] 
+        height = ROOM_HEIGHT[0] + ROOM_HEIGHT[1]
+        # print( "Screen size [" + str(screenx) + "," + str(screeny) + "]" )
+        # print( "Tile size [" + str(width) + "," + str(height) + "]" )
+        # tiles count
+        # print( screenx // width )
+        
+        # there i get devide by  ))
+        # 170 % 10 == 0
+        #'couze screenx % widht == 0
+        cols = screenx // width
+        rows = screeny // height
+        
+        # print( "Tiles count [" + str(rows) + "," + str(cols) + "]" )
+        # prepare return
+        nums = rows * cols
+        unused = []
+        for r in range(0, rows):
+            for c in range(0, cols):
+                unused.append(Tile( c * width, r * height, width, height ))
+        return { "nums": nums, "width": width, "height": height, "unused": unused }
+    
+    def fillTiles( self,tiles ):
+        roomsCount = math.floor( tiles[ "nums" ] * ROOM_RATIO )
+        random.shuffle( tiles[ "unused" ] )
+        for i in range( 0, roomsCount ):
+            tile = tiles[ "unused" ].pop()
+            self.createRoom( tile )
+        return
+    
+    def fitTiles(self):
+        """ calc max tiles that can fit on map"""
+        # save it! for dragons! D @ -- gg wp
+        # -_- :%s///g - not works there. 
+        rows = ROOM_WIDTH[0] + ROOM_WIDTH[1] + CORRIDOR_MIN_SPACE
+        cols = ROOM_HEIGHT[0] + ROOM_HEIGHT[1] + CORRIDOR_MIN_SPACE
+       
+        # равновато ты их в rows пишешь
+        
+        return rows * cols
+        
+    def createRoom(self, tile):
+        # tile instanceof class Tile
+        width  = ROOM_WIDTH[ 0 ]  + random.randint(0, ROOM_WIDTH[ 1 ] )
+        height = ROOM_HEIGHT[ 0 ] + random.randint(0, ROOM_HEIGHT[ 1 ] )
+        r_x = random.randint(tile.x, tile.x + tile.width  - width)
+        r_y = random.randint(tile.y, tile.y + tile.height - height)
+        for x in range(r_x, r_x + width - 1):
+            for y in range(r_y, r_y + height - 1):
+                self.points[ str(x) + "_" +  str(y) ] = "."
+        # return None
+        
     def printMap(self):
         for row in self.points:
                 print("".join(y for y in row))
 
-
     def draw(self, context):
-        for r in self.rooms:
-            r.draw(context)
-        for crd in self.corridors:
-            crd.draw(context)
+        
+        for key in self.points:
+            ( x, y ) = key.split( "_" )
+            char = self.points[ key ]
+            x = int(x) + 1
+            y = int(y) + 1
+            if x is 0 or y is 0:
+                print( "PIDAR!!!" )
+            context.char( char, x, y )
+        # return
+            
+    def connectTiles(self):
+        pass #not ready yet
+        for i in tiles.__len__():
+            # get neighbor index. Neighbor index is in this tile index + or - 4
+            conn_idx = i
+            while (conn_idx == i): # without self
+                conn_idx = random.randint(tiles[i]-4, tiles[i]+4)
+            return conn_idx
+            
+
+class Tile():
+    def __init__(self, x, y, w=4, h=4):
+        self.x = x
+        self.y = y
+        self.rooms = []
+        self.width = w # minimal for room
+        self.height = h # also
+        self.unused = True
