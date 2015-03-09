@@ -8,7 +8,7 @@ out = gameio.Output()
 inp = gameio.Input()
 out.page()
 (w, h) = out.size()
-tiles_counts = [6, 9, 12, 16, 32]
+tiles_counts = [4, 6, 9, 12, 15, 16, 18, 24, 32]
 while 1:
     out.clear()
     map = data.Map(w, h, random.choice(tiles_counts))  # auto generate rooms and corrs on __init___

@@ -77,8 +77,8 @@ class Map():
         #        "%s too few cols for tiles count %s" % (cols, count))
 
         # tiles sizes
-        width = self.width // rows
-        height = self.height // cols
+        width = self.width // cols
+        height = self.height // rows
         # TODO: needs debug screen. or log file writing
         # print("screen w:h :: %s:%s" % (self.width, self.height))
         # print("tiles w:h :: %s:%s" % (width, height))
