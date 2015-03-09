@@ -101,6 +101,7 @@ class Output:
         # self.wr( "\x9B\x3F\x32\x35\x6C" )
         self.wr( ESC + "[?25l" )
         # not working in this cloud IDE ={
+        # also not work in *nix console
         return
     def page( self ):
         """
@@ -196,7 +197,7 @@ class Input:
             # roll terminal setting back
             termios.tcsetattr( sys.stdin, termios.TCSADRAIN, old_settings )
         return self.alias( char )
-    
+
     # def string( self ):
     #     """"""
     #     return ""
