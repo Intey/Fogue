@@ -37,7 +37,7 @@ def dothemagic():
             player[ "x" ],
             player[ "y" ]
         )
-        o.move( 1, 1 )
+        # o.move( 1, 1 )
         
         if ch is "escape":
             o.reset()

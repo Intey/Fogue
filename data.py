@@ -3,6 +3,207 @@ import random
 import math
 
 
+class YayMap():
+    def __init__( self, width, height, debugContext=None ):
+        self.regions = []
+        self.width   = width
+        self.height  = height
+        
+        self.dctx = debugContext
+        
+        self.generate()
+        
+    def generate( self ):
+        
+        ROOM_WIDTH  = [ 5, 5 ]
+        ROOM_HEIGHT = [ 2, 2 ]
+        TILE_EXPAND = 1.3
+        TILE_BORDER = 1
+        ROOM_RATIO  = 0.33
+        
+        tileWidth  = int( ( ROOM_WIDTH[ 0 ]  + ROOM_WIDTH[ 1 ]  + TILE_BORDER ) * TILE_EXPAND )
+        tileHeight = int( ( ROOM_HEIGHT[ 0 ] + ROOM_HEIGHT[ 1 ] + TILE_BORDER ) * TILE_EXPAND )
+        
+        tilesX = self.width  // tileWidth
+        tilesY = self.height // tileHeight
+        
+        tilesMap = {}
+        tiles = []
+        
+        for x in range( 0, tilesX ):
+            for y in range( 0, tilesY ):
+                
+                tile = dict(
+                    room = None,
+                    x = x * tileWidth,
+                    y = y * tileHeight,
+                    width  = tileWidth,
+                    height = tileHeight
+                )
+                
+                tiles.append( tile )
+                tilesMap[ str( x ) + "_" + str( y ) ] = tile
+        
+        if self.dctx:
+            for x in range( tilesX ):
+                for y in range( tilesY ):
+                    # self.dctx.__pushStyle__( [ random.choice( [ "41", "42", "43", "44", "45", "46", "47", "101", "102", "103", "104", "105", "106", "107" ] ) ] )
+                    self.dctx.__pushStyle__( [ ( "47" if ( x + y ) % 2 else "46" ) ] )
+                    self.dctx.__move__( x * tileWidth, y * tileHeight )
+                    self.dctx.__drawRectRelative__( 0, 0, tileWidth, tileHeight, " " )
+                    self.dctx.__popStyle__()
+        
+        roomsCount = int( len( tiles ) * ROOM_RATIO )
+        
+        unusedTiles = tiles.copy()
+        random.shuffle( unusedTiles )
+        
+        rooms = []
+        
+        for i in range( roomsCount ):
+            tile = unusedTiles.pop()
+            
+            # create room in free tile
+            
+            width  = ROOM_WIDTH[ 0 ]  + random.randint( 0, ROOM_WIDTH[ 1 ] )
+            height = ROOM_HEIGHT[ 0 ] + random.randint( 0, ROOM_HEIGHT[ 1 ] )
+            
+            x = tile[ "x" ] + random.randint( 0, tile[ "width" ] - TILE_BORDER  - width ) 
+            y = tile[ "y" ] + random.randint( 0, tile[ "height" ] - TILE_BORDER - height )
+            
+            room = dict(
+                width  = width,
+                height = height,
+                x = x,
+                y = y
+            )
+            
+            tile[ "room" ] = room
+            rooms.append( room )
+        
+        if self.dctx:
+            self.dctx.__pushStyle__( [ "37", "43" ] )
+            for room in rooms:
+                self.dctx.__move__( room[ "x" ], room[ "y" ] )
+                self.dctx.__drawRectRelative__( 0, 0, room[ "width" ], room[ "height" ], "." )
+            self.dctx.__popStyle__()
+        
+        return
+
+
+    def draw( self, ctx ): pass
+
+
+
+
+class PeeMap():
+    
+    ROOM_WIDTH  = [ 5, 5 ]
+    ROOM_HEIGHT = [ 2, 2 ]
+    DIRECTIONS = dict(
+        up    = [ 0, -1 ],
+        down  = [ 0, 1 ],
+        right = [ 1, 0 ],
+        left  = [ -1, 0 ]
+    )
+    
+    def __init__( self, width, height, dctx ):
+        self.width  = width
+        self.height = height
+        self.dctx   = dctx
+        
+        self.generate()
+        
+    def generate( self ):
+        
+        buff = {}
+        
+        room = self.createRoom( ( 0, 0, self.width, self.height ) )
+        roomToBuffer( room, buff )
+        
+        rooms = []
+        
+        return
+
+    def getAreaFromBuffer( self, room, startx, starty, direction, buff ):
+        
+        modx = PeeMap.DIRECTIONS[ direction ][ 0 ]
+        mody = PeeMap.DIRECTIONS[ direction ][ 1 ]
+        
+        x = startx
+        y = starty
+        
+        
+        spaceBefore = ( 0 if modx is  1 or mody is -1 else ( self.width if mody is  1 else self.height ) )
+        spaceAfter  = ( 0 if modx is -1 or mody is  1 else ( self.width if mody is -1 else self.height ) )
+        spaceAhead  = ( 0 if modx is -1 or mody is -1 else ( self.width if modx is  1 else self.height ) )
+        
+        while spaceAhead:
+            
+            spaceAhead -= 1
+            
+            x += modx
+            y += mody
+            
+            # check ahead
+            
+            if str( x ) + "_" + str( y ) in buff:
+                break
+            
+            
+            
+            # check sides
+            
+            sidex = x
+            sidey = y
+            
+            if modx:
+                # horizontal
+            else:
+                # vertical
+                i = sidex
+                while i <= self.width:
+                    i += 1
+                    if str( i ) + "_" + str( y ) in buff:
+                        break
+        #####
+        #   #
+        # @ #
+        #   #
+        #####
+        
+        return
+    
+    def roomToBuffer( self, room, buff ):
+        for x in range( 0, room[ "width" ] ):
+            for y in range( 0, room[ "height" ] ):
+                buf[ str( x + room[ "x" ] ) + "_" + str( y + room[ "y" ] ) ] = room
+        return
+
+    def createRoom( self, area ):
+        
+        ( areaX, areaY, areaWidth, areaHeight ) = area
+        
+        width  = PeeMap.ROOM_WIDTH[ 0 ]  + random.randint( 0, PeeMap.ROOM_WIDTH[ 1 ] )
+        height = PeeMap.ROOM_HEIGHT[ 0 ] + random.randint( 0, PeeMap.ROOM_HEIGHT[ 1 ] )
+        
+        x = areaX + random.randint( 0, areaWidth  - width ) 
+        y = areaY + random.randint( 0, areaHeight - height )        
+        
+        room = dict(
+            width  = width,
+            height = height,
+            x = x,
+            y = y
+        )
+        
+        return room
+        
+        
+
+
+
+
 class Item():
     def __init__(self, x, y):
         self.name = "unknown"

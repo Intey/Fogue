@@ -6,13 +6,16 @@ import random
 #    print("for num %s rows %s and cols %s" % (val, r, c))
 out = gameio.Output()
 inp = gameio.Input()
+out.__addOne__ = True
 out.page()
+out.hideCursor()
 (w, h) = out.size()
 tiles_counts = [4, 6, 9, 12, 15, 16, 18, 24, 32]
 while 1:
     out.clear()
-    map = data.Map(w, h, random.choice(tiles_counts))  # auto generate rooms and corrs on __init___
-    map.draw(out)
+    data.YayMap( w, h, out )
+    # map = data.Map(w, h, random.choice(tiles_counts))  # auto generate rooms and corrs on __init___
+    # map.draw(out)
     ch = inp.char()
     if ch is "escape":
         out.reset()
