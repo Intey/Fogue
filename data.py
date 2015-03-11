@@ -147,14 +147,3 @@ class Tile():
         self.height = h  # also
 
 
-def getMaxDividers(num):
-    """Return max dividers of num."""
-    devider = 1
-    rest = num
-    outdev = devider
-    while (rest > devider):
-        if num % devider == 0:
-            rest = num // devider
-            outdev = devider
-        devider += 1
-    return sorted([rest, outdev])
